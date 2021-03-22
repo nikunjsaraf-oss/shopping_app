@@ -12,20 +12,24 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => Products(),
-      child: MaterialApp(
-        title: 'Shopping app',
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Products(),
+          child: MaterialApp(
+            title: 'Shopping app',
+            theme: ThemeData(
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+              fontFamily: 'Lato',
+            ),
+            home: ProductsOverviewScreen(),
+            routes: {
+              ProductDetailsScreen.routeNamed: (ctx) => ProductDetailsScreen(),
+            },
+          ),
         ),
-        home: ProductsOverviewScreen(),
-        routes: {
-          ProductDetailsScreen.routeNamed: (ctx) => ProductDetailsScreen(),
-        },
-      ),
+      ],
     );
   }
 }
