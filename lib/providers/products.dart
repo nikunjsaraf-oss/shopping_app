@@ -18,7 +18,7 @@ class Products with ChangeNotifier {
       description: 'A nice pair of trousers.',
       price: 59.99,
       imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+          'https://images-na.ssl-images-amazon.com/images/I/81t1RJtrHDL._UL1500_.jpg',
     ),
     Product(
       id: 'p3',
@@ -34,15 +34,15 @@ class Products with ChangeNotifier {
       description: 'Prepare any meal you want.',
       price: 49.99,
       imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+          'https://image.shutterstock.com/image-photo/black-fry-pan-over-white-260nw-750875404.jpg',
     ),
   ];
 
-  List<Product> get items {
+  List<Product> get getItems {
     return [..._items];
   }
 
-  List<Product> get favoriteItems {
+  List<Product> get getFavoriteItems {
     return _items.where((product) => product.isFavorite).toList();
   }
 
