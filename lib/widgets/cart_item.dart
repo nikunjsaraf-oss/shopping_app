@@ -9,6 +9,7 @@ class CartItem extends StatelessWidget {
   final double price;
   final int quantity;
   final String title;
+  final String imageUrl;
 
   CartItem({
     this.id,
@@ -16,13 +17,14 @@ class CartItem extends StatelessWidget {
     this.price,
     this.quantity,
     this.title,
+    this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       direction: DismissDirection.endToStart,
-      key: ValueKey(id), 
+      key: ValueKey(id),
       background: Container(
         color: Theme.of(context).errorColor,
         child: Icon(
@@ -37,7 +39,7 @@ class CartItem extends StatelessWidget {
           vertical: 4,
         ),
       ),
-      onDismissed: (direction){
+      onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
       child: Card(
@@ -48,18 +50,10 @@ class CartItem extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(8),
             child: ListTile(
-              leading: CircleAvatar(
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: FittedBox(
-                    child: Text(
-                      '\$$price',
-                    ),
-                  ),
-                ),
-              ),
+              leading: Image.network(imageUrl),
               title: Text(title),
-              subtitle: Text('Total: \$${(price * quantity)}'),
+              subtitle:
+                  Text('Total: \$${(price * quantity).toStringAsFixed(2)}'),
               trailing: Text('$quantity x'),
             ),
           )),
