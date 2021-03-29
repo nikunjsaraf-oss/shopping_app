@@ -73,7 +73,9 @@ class CartItem extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(8),
             child: ListTile(
-              leading: Image.network(imageUrl),
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(imageUrl),
+              ),
               title: Text(title),
               subtitle:
                   Text('Total: \$${(price * quantity).toStringAsFixed(2)}'),
