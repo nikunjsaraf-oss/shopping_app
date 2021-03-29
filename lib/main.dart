@@ -31,9 +31,8 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Shopping app',
           theme: ThemeData(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
-            fontFamily: 'Lato',
+            primaryColor: Color(0xff27AE60),
+            accentColor: Color(0xff27AE60)
           ),
           home: ProductsOverviewScreen(),
           routes: {
@@ -45,3 +44,7 @@ class MyApp extends StatelessWidget {
         ));
   }
 }
+
+// dark theme:
+// primaryColor: Color(0xff2C2C2C),
+// accentColor: Color(0xffF36E36)
