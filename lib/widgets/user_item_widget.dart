@@ -25,7 +25,7 @@ class UserItem extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () {},
-                color: Theme.of(context).primaryColor,
+                color: Colors.white,
               ),
               IconButton(
                 icon: Icon(Icons.delete),
