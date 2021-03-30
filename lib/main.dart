@@ -7,6 +7,7 @@ import 'providers/products_provider.dart';
 import './screens/cart_screen.dart';
 import './screens/orders_screen.dart';
 import './screens/product_detail_screen.dart';
+import './screens/product_edit_screen.dart';
 import './screens/products_overview_screen.dart';
 import './screens/user_product_screen.dart';
 
@@ -16,29 +17,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => Products(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Cart(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Orders(),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Shopping app',
-          theme: ThemeData.dark().copyWith(
-              primaryColor: Color(0xff2C2C2C), accentColor: Color(0xffF36E36)),
-          home: ProductsOverviewScreen(),
-          routes: {
-            ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
-            CartScreen.screenId: (context) => CartScreen(),
-            OrdersScreen.screenId: (context) => OrdersScreen(),
-            UserProductScreen.screenId: (context) => UserProductScreen(),
-          },
-        ));
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Orders(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Shopping app',
+        theme: ThemeData.dark().copyWith(
+            primaryColor: Color(0xff2C2C2C), accentColor: Color(0xffF36E36)),
+        home: ProductsOverviewScreen(),
+        routes: {
+          ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
+          CartScreen.screenId: (context) => CartScreen(),
+          OrdersScreen.screenId: (context) => OrdersScreen(),
+          UserProductScreen.screenId: (context) => UserProductScreen(),
+          ProductEditScreen.screenId: (context)=>ProductEditScreen(),
+        },
+      ),
+    );
   }
 }
 
