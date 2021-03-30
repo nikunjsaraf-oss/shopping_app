@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './providers/cart.dart';
-import './providers/orders.dart';
-import './providers/products.dart';
+import 'providers/cart_provider.dart';
+import 'providers/orders_provider.dart';
+import 'providers/products_provider.dart';
 import './screens/cart_screen.dart';
 import './screens/orders_screen.dart';
 import './screens/product_detail_screen.dart';
 import './screens/products_overview_screen.dart';
 import './screens/user_product_screen.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -31,8 +29,8 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Shopping app',
-          theme: ThemeData(
-              primaryColor: Color(0xff27AE60), accentColor: Color(0xff27AE60)),
+          theme: ThemeData.dark().copyWith(
+              primaryColor: Color(0xff2C2C2C), accentColor: Color(0xffF36E36)),
           home: ProductsOverviewScreen(),
           routes: {
             ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
@@ -45,5 +43,3 @@ class MyApp extends StatelessWidget {
 }
 
 // dark theme:
-// primaryColor: Color(0xff2C2C2C),
-// accentColor: Color(0xffF36E36)

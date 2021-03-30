@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/orders.dart' show Orders;
-import '../widgets/appdrawer.dart';
-import '../widgets/order_item.dart';
+import '../providers/orders_provider.dart' show Orders;
+import '../widgets/appdrawer_widget.dart';
+import '../widgets/order_item_widget.dart';
 
 class OrdersScreen extends StatelessWidget {
   static const screenId = '/orders';

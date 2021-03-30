@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/products.dart';
-import '../widgets/appdrawer.dart';
-import '../widgets/user_item.dart';
+import '../providers/products_provider.dart';
+import '../widgets/appdrawer_widget.dart';
+import '../widgets/user_item_widget.dart';
 
 class UserProductScreen extends StatelessWidget {
   static const String screenId = '/user-product-screen';

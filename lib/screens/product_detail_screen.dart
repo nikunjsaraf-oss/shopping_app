@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/products.dart';
+import '../providers/products_provider.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   static const screenId = '/product-overview';
