@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/product_provider.dart';
+import '../providers/products_provider.dart';
 
 class ProductEditScreen extends StatefulWidget {
   static const String screenId = '/productEditScreen';
@@ -50,6 +52,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       return;
     }
     _formKey.currentState.save();
+    Provider.of<Products>(context, listen: false).addProducts(_editedProduct);
+    Navigator.pop(context);
   }
 
   @override
