@@ -46,6 +46,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   }
 
   void _saveProduct() {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     _formKey.currentState.save();
   }
 
@@ -57,8 +60,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () {},
-          )
+            onPressed: _saveProduct,
+          ),
         ],
       ),
       body: Padding(
@@ -74,6 +77,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_priceFocus);
+                  },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please provide the title';
+                    }
+                    return null;
                   },
                   onSaved: (value) {
                     _editedProduct = Product(
@@ -94,6 +103,16 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_descriptionFocusNode);
                   },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please provide a price';
+                    }
+                    if (double.tryParse(value) == null ||
+                        double.parse(value) <= 0) {
+                      return 'Please provide a valid price';
+                    }
+                    return null;
+                  },
                   onSaved: (value) {
                     _editedProduct = Product(
                       title: _editedProduct.title,
@@ -110,6 +129,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
                   focusNode: _descriptionFocusNode,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter a valid description';
+                    }
+                    return null;
+                  },
                   onSaved: (value) {
                     _editedProduct = Product(
                       title: _editedProduct.title,
@@ -137,7 +162,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         ),
                       ),
                       child: _imageUrlController.text.isEmpty
-                          ? Text('Enter a URL')
+                          ? Center(child: Text('Enter a URL'))
                           : FittedBox(
                               child: Image.network(
                                 _imageUrlController.text,
@@ -158,6 +183,16 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                           copy: true,
                           selectAll: true,
                         ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please provide a valid URL';
+                          }
+                          if (!value.startsWith('http') &&
+                              !value.startsWith('https')) {
+                            return 'Enter a valid URL';
+                          }
+                          return null;
+                        },
                         onSaved: (value) {
                           _editedProduct = Product(
                             title: _editedProduct.title,
