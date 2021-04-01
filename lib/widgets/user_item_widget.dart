@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/product_edit_screen.dart';
+import '../providers/products_provider.dart';
 
 class UserItem extends StatelessWidget {
   final String id;
@@ -17,25 +19,30 @@ class UserItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-          child: ListTile(
+      child: ListTile(
         title: Text(title),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(imageUrl),
         ),
         trailing: Container(
-          width: 100 ,
+          width: 100,
           child: Row(
             children: [
               IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ProductEditScreen.screenId, arguments: id);
+                  Navigator.of(context)
+                      .pushNamed(ProductEditScreen.screenId, arguments: id);
                 },
                 color: Colors.white,
               ),
               IconButton(
                 icon: Icon(Icons.delete),
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<Products>(context, listen: false).deleteProduct(
+                    id,
+                  );
+                },
                 color: Colors.red,
               ),
             ],
