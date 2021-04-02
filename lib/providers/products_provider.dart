@@ -58,27 +58,28 @@ class Products with ChangeNotifier {
       'shoppers-2dc98-default-rtdb.firebaseio.com',
       '/product.json',
     );
-    http.post(
+    http
+        .post(
       url,
-      body: json.encode(
-        {
-          'title': product.title,
-          'price': product.price,
-          'description': product.description,
-          'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
-        },
-      ),
-    );
-    Product newProduct = Product(
-      description: product.description,
-      id: DateTime.now().toString(),
-      imageUrl: product.imageUrl,
-      price: product.price,
-      title: product.title,
-    );
-    _items.add(newProduct);
-    notifyListeners();
+      body: json.encode({
+        'title': product.title,
+        'price': product.price,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'isFavorite': product.isFavorite,
+      }),
+    )
+        .then((response) {
+      Product newProduct = Product(
+        description: product.description,
+        id: json.decode(response.body)['name'],
+        imageUrl: product.imageUrl,
+        price: product.price,
+        title: product.title,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
   }
 
   void updateProduct(String productId, Product newProduct) {
