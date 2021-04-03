@@ -6,7 +6,6 @@ import '../providers/product_provider.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
@@ -19,9 +18,11 @@ class ProductItem extends StatelessWidget {
             Navigator.of(context).pushNamed(ProductDetailsScreen.screenId,
                 arguments: product.id);
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: FittedBox(
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         footer: GridTileBar(
@@ -45,19 +46,17 @@ class ProductItem extends StatelessWidget {
             color: Theme.of(context).accentColor,
             onPressed: () {
               cart.addItem(
-                product.id,
-                product.price,
-                product.title,
-                product.imageUrl
-              );
+                  product.id, product.price, product.title, product.imageUrl);
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Item added to cart.'),
                   duration: Duration(seconds: 2),
-                  action: SnackBarAction(label: 'UNDO', onPressed: (){
-                    cart.removeSingleItem(product.id);
-                  }),
+                  action: SnackBarAction(
+                      label: 'UNDO',
+                      onPressed: () {
+                        cart.removeSingleItem(product.id);
+                      }),
                 ),
               );
             },
