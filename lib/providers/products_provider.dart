@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/http_exception.dart';
 import 'product_provider.dart';
 
 class Products with ChangeNotifier {
@@ -86,30 +87,42 @@ class Products with ChangeNotifier {
         'shoppers-2dc98-default-rtdb.firebaseio.com',
         '/product/$productId.json',
       );
-      try {
-        await http.patch(
-          url,
-          body: json.encode(
-            {
-              'description': newProduct.description,
-              'imageUrl': newProduct.imageUrl,
-              'price': newProduct.price,
-              'title': newProduct.title,
-            },
-          ),
-        );
-        _items[productindex] = newProduct;
-        notifyListeners();
-      } catch (error) {
-        throw error;
-      }
+      await http.patch(
+        url,
+        body: json.encode(
+          {
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+            'title': newProduct.title,
+          },
+        ),
+      );
+      _items[productindex] = newProduct;
+      notifyListeners();
     } else {
       print('...');
     }
   }
 
-  void deleteProduct(String productId) {
-    _items.removeWhere((product) => product.id == productId);
+  Future<void> deleteProduct(String productId) async {
+    final Uri url = Uri.https(
+      'shoppers-2dc98-default-rtdb.firebaseio.com',
+      '/product/$productId.json',
+    );
+
+    final int _productIndex =
+        _items.indexWhere((product) => product.id == productId);
+    Product _product = _items[_productIndex];
+    _items.removeAt(_productIndex);
     notifyListeners();
+    final http.Response response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      _items.insert(_productIndex, _product);
+      notifyListeners();
+      throw HttpException('Could not delete product');
+    }
+    _product = null;
   }
 }

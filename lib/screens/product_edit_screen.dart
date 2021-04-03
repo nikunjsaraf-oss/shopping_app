@@ -87,14 +87,10 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       _isLoading = true;
     });
     if (_editedProduct.id != null) {
-      try {
-        await Provider.of<Products>(context, listen: false).updateProduct(
-          _editedProduct.id,
-          _editedProduct,
-        );
-      } catch (error) {
-        await showErrorDialogBox();
-      }
+      await Provider.of<Products>(context, listen: false).updateProduct(
+        _editedProduct.id,
+        _editedProduct,
+      );
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
@@ -103,10 +99,10 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
         await showErrorDialogBox();
       }
     }
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   Future showErrorDialogBox() async {
