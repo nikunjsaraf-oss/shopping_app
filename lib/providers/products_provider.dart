@@ -78,12 +78,31 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateProduct(String productId, Product newProduct) {
+  Future<void> updateProduct(String productId, Product newProduct) async {
     final productindex =
         _items.indexWhere((product) => product.id == productId);
     if (productindex >= 0) {
-      _items[productindex] = newProduct;
-      notifyListeners();
+      final Uri url = Uri.https(
+        'shoppers-2dc98-default-rtdb.firebaseio.com',
+        '/product/$productId.json',
+      );
+      try {
+        await http.patch(
+          url,
+          body: json.encode(
+            {
+              'description': newProduct.description,
+              'imageUrl': newProduct.imageUrl,
+              'price': newProduct.price,
+              'title': newProduct.title,
+            },
+          ),
+        );
+        _items[productindex] = newProduct;
+        notifyListeners();
+      } catch (error) {
+        throw error;
+      }
     } else {
       print('...');
     }

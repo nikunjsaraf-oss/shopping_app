@@ -87,45 +87,48 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       _isLoading = true;
     });
     if (_editedProduct.id != null) {
-      Provider.of<Products>(context, listen: false).updateProduct(
-        _editedProduct.id,
-        _editedProduct,
-      );
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.pop(context);
+      try {
+        await Provider.of<Products>(context, listen: false).updateProduct(
+          _editedProduct.id,
+          _editedProduct,
+        );
+      } catch (error) {
+        await showErrorDialogBox();
+      }
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
             .addProduct(_editedProduct);
       } catch (error) {
-        await showDialog<Null>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('An error occured!'),
-            content: Text('Something went wrong'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Okay'),
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.redAccent,
-                ),
-              )
-            ],
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
+        await showErrorDialogBox();
       }
     }
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+  }
+
+  Future showErrorDialogBox() async {
+    await showDialog<Null>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('An error occured!'),
+        content: Text('Something went wrong'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Okay'),
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: Colors.redAccent,
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
