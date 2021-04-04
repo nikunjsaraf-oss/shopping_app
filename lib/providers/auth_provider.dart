@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
 import '../models/http_exception.dart';
 import '../api_key.dart';
 
@@ -9,6 +10,19 @@ class Auth with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
+
+  bool get getIsAuth {
+    return getToken != null;
+  }
+
+  String get getToken {
+    if (_token != null &&
+        _expiryDate.isAfter(DateTime.now()) &&
+        _expiryDate != null) {
+      return _token;
+    }
+    return null;
+  }
 
   Future _authenticate(String email, String password, String urlSegment) async {
     final Uri url = Uri.parse(
@@ -26,9 +40,19 @@ class Auth with ChangeNotifier {
         ),
       );
       final responseData = json.decode(response.body);
-      if(responseData['error']!= null){
-        throw HttpException(responseData['error']['message']);  
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
       }
+      _token = responseData['idToken'];
+      _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            responseData['expiresIn'],
+          ),
+        ),
+      );
+      notifyListeners();
     } catch (error) {
       throw error;
     }

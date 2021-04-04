@@ -33,24 +33,24 @@ class MyApp extends StatelessWidget {
           create: (context) => Orders(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Shopping app',
-        theme: ThemeData.dark().copyWith(
-          primaryColor: Color(0xff2C2C2C),
-          accentColor: Color(0xffF36E36),
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => MaterialApp(
+          title: 'Shopping app',
+          theme: ThemeData.dark().copyWith(
+            primaryColor: Color(0xff2C2C2C),
+            accentColor: Color(0xffF36E36),
+          ),
+          home: auth.getIsAuth?ProductsOverviewScreen():AuthScreen(),
+          routes: {
+            AuthScreen.screenId: (context) => AuthScreen(),
+            ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
+            CartScreen.screenId: (context) => CartScreen(),
+            OrdersScreen.screenId: (context) => OrdersScreen(),
+            UserProductScreen.screenId: (context) => UserProductScreen(),
+            ProductEditScreen.screenId: (context) => ProductEditScreen(),
+          },
         ),
-        home: AuthScreen(),
-        routes: {
-          AuthScreen.screenId: (context) => AuthScreen(),
-          ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
-          CartScreen.screenId: (context) => CartScreen(),
-          OrdersScreen.screenId: (context) => OrdersScreen(),
-          UserProductScreen.screenId: (context) => UserProductScreen(),
-          ProductEditScreen.screenId: (context) => ProductEditScreen(),
-        },
       ),
     );
   }
 }
-
-// dark theme:
