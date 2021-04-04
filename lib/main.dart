@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/orders_provider.dart';
 import 'providers/products_provider.dart';
+import './screens/auth_screen.dart';
 import './screens/cart_screen.dart';
 import './screens/orders_screen.dart';
 import './screens/product_detail_screen.dart';
@@ -31,14 +32,17 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Shopping app',
         theme: ThemeData.dark().copyWith(
-            primaryColor: Color(0xff2C2C2C), accentColor: Color(0xffF36E36)),
-        home: ProductsOverviewScreen(),
+          primaryColor: Color(0xff2C2C2C),
+          accentColor: Color(0xffF36E36),
+        ),
+        home: AuthScreen(),
         routes: {
+          AuthScreen.screenId: (context) => AuthScreen(),
           ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
           CartScreen.screenId: (context) => CartScreen(),
           OrdersScreen.screenId: (context) => OrdersScreen(),
           UserProductScreen.screenId: (context) => UserProductScreen(),
-          ProductEditScreen.screenId: (context)=>ProductEditScreen(),
+          ProductEditScreen.screenId: (context) => ProductEditScreen(),
         },
       ),
     );
