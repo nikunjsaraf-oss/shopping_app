@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
+import '../models/http_exception.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -99,8 +100,31 @@ class _AuthCardState extends State<AuthCard> {
     'email': '',
     'password': '',
   };
-  var _isLoading = false;
-  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  TextEditingController _passwordController = TextEditingController();
+
+  void _showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('ERROR!'),
+        content: Text(
+          errorMessage,
+        ),
+        actions: [
+          TextButton(
+            child: Text('Okay'),
+            style: TextButton.styleFrom(
+              primary: Theme.of(context).accentColor,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(context);
+            },
+          )
+        ],
+      ),
+    );
+  }
 
   void _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -111,18 +135,37 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-      await Provider.of<Auth>(context, listen: false).logIn(
-        _authData['email'],
-        _authData['password'],
-      );
-    } else {
-      // Sign user up
-     await Provider.of<Auth>(context, listen: false).signUp(
-        _authData['email'],
-        _authData['password'],
-      );
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false).logIn(
+          _authData['email'],
+          _authData['password'],
+        );
+      } else {
+        // Sign user up
+        await Provider.of<Auth>(context, listen: false).signUp(
+          _authData['email'],
+          _authData['password'],
+        );
+      }
+    } on HttpException catch (error) {
+      String errorMessage = 'Authentication failed!';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'Email already exists!';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Password incorrect.';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Please enter a valid email.';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'The password is weak.';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'No account with this e-mail exists.';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const String errorMessage = 'Could not authenticate';
+      _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;
