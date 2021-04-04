@@ -26,6 +26,39 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  Future<void> fetchAndSetData() async {
+    final Uri url = Uri.https(
+      'shoppers-2dc98-default-rtdb.firebaseio.com',
+      '/order.json',
+    );
+    final http.Response response = await http.get(url);
+    final List<OrderItem> _loadedOrders = [];
+    final Map<String, dynamic> extractedData = json.decode(response.body);
+    if (extractedData == null) return;
+    extractedData.forEach((orderId, orderData) {
+      _loadedOrders.add(
+        OrderItem(
+          amount: orderData['amount'],
+          dateTime: DateTime.parse(orderData['dateTime']),
+          id: orderId,
+          products: (orderData['products'] as List<dynamic>)
+              .map(
+                (cartItem) => CartItem(
+                  id: cartItem['id'],
+                  imageUrl: cartItem['imageUrl'],
+                  price: cartItem['price'],
+                  quantity: cartItem['quantity'],
+                  title: cartItem['title'],
+                ),
+              )
+              .toList(),
+        ),
+      );
+    });
+    _orders = _loadedOrders.reversed.toList();
+    notifyListeners();
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final Uri url = Uri.https(
       'shoppers-2dc98-default-rtdb.firebaseio.com',
