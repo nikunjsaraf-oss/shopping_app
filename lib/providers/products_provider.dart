@@ -8,7 +8,8 @@ import 'product_provider.dart';
 
 class Products with ChangeNotifier {
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+  Products(this.authToken, this._items, this.userId);
 
   List<Product> _items = [];
 
@@ -25,7 +26,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
-    final Uri url = Uri.https(
+    Uri url = Uri.https(
       'shoppers-2dc98-default-rtdb.firebaseio.com',
       '/product.json',
       {'auth': authToken},
@@ -34,6 +35,13 @@ class Products with ChangeNotifier {
       final http.Response response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) return;
+      url = Uri.https(
+        'shoppers-2dc98-default-rtdb.firebaseio.com',
+        '/userFavorites/$userId.json',
+        {'auth': authToken},
+      );
+      final http.Response favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProduct = [];
       extractedData.forEach((productId, productData) {
         loadedProduct.add(
@@ -42,8 +50,8 @@ class Products with ChangeNotifier {
             title: productData['title'],
             description: productData['description'],
             price: productData['price'],
+            isFavorite: favoriteData == null ? false : favoriteData[productId] ?? false,
             imageUrl: productData['imageUrl'],
-            isFavorite: productData['isFavorite'],
           ),
         );
       });
@@ -63,13 +71,14 @@ class Products with ChangeNotifier {
     try {
       final http.Response response = await http.post(
         url,
-        body: json.encode({
-          'title': product.title,
-          'price': product.price,
-          'description': product.description,
-          'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
-        }),
+        body: json.encode(
+          {
+            'title': product.title,
+            'price': product.price,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+          },
+        ),
       );
       Product newProduct = Product(
         description: product.description,
