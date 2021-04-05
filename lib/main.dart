@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './providers/auth_provider.dart';
-import './providers/cart_provider.dart';
-import './providers/orders_provider.dart';
-import './providers/products_provider.dart';
-import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
 import './screens/cart_screen.dart';
-import './screens/orders_screen.dart';
-import './screens/product_detail_screen.dart';
-import './screens/product_edit_screen.dart';
 import './screens/products_overview_screen.dart';
-import './screens/user_product_screen.dart';
+import './screens/product_detail_screen.dart';
+import './providers/products.dart';
+import './providers/cart.dart';
+import './providers/orders.dart';
+import './providers/auth.dart';
+import './screens/orders_screen.dart';
+import './screens/user_products_screen.dart';
+import './screens/edit_product_screen.dart';
+import './screens/auth_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,41 +21,53 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => Auth(),
+        ChangeNotifierProvider.value(
+          value: Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
           create: null,
-          update: (context, auth, previousProducts) => Products(
-            auth.getToken,
-            previousProducts == null ? [] : previousProducts.getItems,
-            auth.getUserId,
+          update: (ctx, auth, previousProducts) => Products(
+            auth.token,
+            auth.userId,
+            previousProducts == null ? [] : previousProducts.items,
           ),
         ),
-        ChangeNotifierProvider(
-          create: (context) => Cart(),
+        ChangeNotifierProvider.value(
+          value: Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: null,
-          update: (context, auth, previousOrders) => Orders(auth.getToken,
-              previousOrders == null ? [] : previousOrders.getOrders),
+          update: (ctx, auth, previousOrders) => Orders(
+            auth.token,
+            auth.userId,
+            previousOrders == null ? [] : previousOrders.orders,
+          ),
         ),
       ],
       child: Consumer<Auth>(
-        builder: (context, auth, _) => MaterialApp(
-          title: 'Shopping app',
-          theme: ThemeData.dark().copyWith(
-            primaryColor: Color(0xff2C2C2C),
-            accentColor: Color(0xffF36E36),
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'MyShop',
+          theme: ThemeData(
+            primarySwatch: Colors.purple,
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Lato',
           ),
-          home: auth.getIsAuth ? ProductsOverviewScreen() : AuthScreen(),
+          home: auth.isAuth
+              ? ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
           routes: {
-            AuthScreen.screenId: (context) => AuthScreen(),
-            ProductDetailsScreen.screenId: (context) => ProductDetailsScreen(),
-            CartScreen.screenId: (context) => CartScreen(),
-            OrdersScreen.screenId: (context) => OrdersScreen(),
-            UserProductScreen.screenId: (context) => UserProductScreen(),
-            ProductEditScreen.screenId: (context) => ProductEditScreen(),
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            CartScreen.routeName: (ctx) => CartScreen(),
+            OrdersScreen.routeName: (ctx) => OrdersScreen(),
+            UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+            EditProductScreen.routeName: (ctx) => EditProductScreen(),
           },
         ),
       ),
