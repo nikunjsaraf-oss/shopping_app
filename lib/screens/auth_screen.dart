@@ -256,9 +256,9 @@ class _AuthCardState extends State<AuthCard> {
                         ),
                         padding: EdgeInsets.symmetric(
                             horizontal: 30.0, vertical: 8.0),
-                        primary: Theme.of(context).primaryColor,
+                        primary: Theme.of(context).accentColor,
                         onPrimary:
-                            Theme.of(context).primaryTextTheme.button.color,
+                            Colors.white,
                       )),
                 TextButton(
                   child: Text(
