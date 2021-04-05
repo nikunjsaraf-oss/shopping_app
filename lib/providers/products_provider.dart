@@ -58,6 +58,7 @@ class Products with ChangeNotifier {
     final Uri url = Uri.https(
       'shoppers-2dc98-default-rtdb.firebaseio.com',
       '/product.json',
+      {'auth': authToken},
     );
     try {
       final http.Response response = await http.post(
@@ -91,6 +92,7 @@ class Products with ChangeNotifier {
       final Uri url = Uri.https(
         'shoppers-2dc98-default-rtdb.firebaseio.com',
         '/product/$productId.json',
+        {'auth': authToken},
       );
       await http.patch(
         url,
@@ -114,6 +116,7 @@ class Products with ChangeNotifier {
     final Uri url = Uri.https(
       'shoppers-2dc98-default-rtdb.firebaseio.com',
       '/product/$productId.json',
+      {'auth': authToken},
     );
 
     final int _productIndex =
