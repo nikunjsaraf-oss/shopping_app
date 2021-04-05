@@ -7,6 +7,9 @@ import '../models/http_exception.dart';
 import 'product_provider.dart';
 
 class Products with ChangeNotifier {
+  final String authToken;
+  Products(this.authToken, this._items);
+
   List<Product> _items = [];
 
   List<Product> get getItems {
@@ -25,6 +28,7 @@ class Products with ChangeNotifier {
     final Uri url = Uri.https(
       'shoppers-2dc98-default-rtdb.firebaseio.com',
       '/product.json',
+      {'auth': authToken},
     );
     try {
       final http.Response response = await http.get(url);
